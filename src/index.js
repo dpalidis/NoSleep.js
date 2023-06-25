@@ -18,6 +18,8 @@ const oldIOS = () =>
 
 // Detect native Wake Lock API support
 const nativeWakeLock = () => ("wakeLock" in navigator && !navigator.standalone);
+console.log('native wake lock:')
+console.log(nativeWakeLock)
 
 class NoSleep {
   constructor() {
@@ -42,6 +44,16 @@ class NoSleep {
 
       this._addSourceToVideo(this.noSleepVideo, "webm", webm);
       this._addSourceToVideo(this.noSleepVideo, "mp4", mp4);
+
+      // patch for ios
+      const hideCss = {
+        position: 'absolute',
+        left: '-100%',
+        top: '-100%'
+      }
+Object.assign(this.noSleepVideo.style, hideCss);
+
+document.querySelector('body').append(this.noSleepVideo);
 
       this.noSleepVideo.addEventListener("loadedmetadata", () => {
         if (this.noSleepVideo.duration <= 1) {
